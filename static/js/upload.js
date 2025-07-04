@@ -74,11 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    if (clearPhotosBtn) {
-        clearPhotosBtn.addEventListener('click', function() {
-            clearCapturedPhotos();
-        });
-    }
+
 
     // Close camera when modal is hidden
     document.getElementById('cameraModal')?.addEventListener('hidden.bs.modal', function() {
@@ -320,8 +316,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function showPhotoApproval(canvas) {
-        // Hide shutter button
+        // Hide shutter button and upload button
         takePhotoBtn.style.display = 'none';
+        uploadPhotosBtn.style.display = 'none';
         
         // Remove existing approval buttons if any
         const existingApproval = document.getElementById('photo-approval');
