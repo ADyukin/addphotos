@@ -37,15 +37,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Take photo option handler
     takePhotoOption.addEventListener('click', function() {
-        photoSelectionModal.hide();
-        openCamera();
+        setTimeout(() => {
+            photoSelectionModal.hide();
+            openCamera();
+        }, 10);
     });
 
     // Gallery option handler
     const galleryOption = document.getElementById('gallery-option');
     galleryOption.addEventListener('click', function() {
-        photoSelectionModal.hide();
-        document.getElementById('file-input').click();
+        setTimeout(() => {
+            photoSelectionModal.hide();
+            document.getElementById('file-input').click();
+        }, 10);
     });
 
     // Handle file input change
@@ -218,8 +222,6 @@ document.addEventListener('DOMContentLoaded', function() {
             cameraCanvas.style.display = 'none';
             takePhotoBtn.style.display = 'none';
             uploadPhotosBtn.style.display = 'none';
-            clearPhotosBtn.style.display = 'none';
-            photoCounter.style.display = 'none';
             
             // Reset photo data
             capturedPhotos = [];
@@ -263,7 +265,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Wait for video to be ready before showing it
             cameraVideo.onloadedmetadata = function() {
                 cameraVideo.style.display = 'block';
-                takePhotoBtn.style.display = 'inline-block';
+                takePhotoBtn.style.display = 'block';
             };
             
         } catch (error) {
@@ -387,21 +389,20 @@ document.addEventListener('DOMContentLoaded', function() {
         // Show video again, hide canvas
         cameraVideo.style.display = 'block';
         cameraCanvas.style.display = 'none';
-        takePhotoBtn.style.display = 'inline-block';
+        takePhotoBtn.style.display = 'block';
         
-        // Show upload/clear buttons if we have photos
+        // Show upload button if we have photos
         if (capturedPhotos.length > 0) {
-            uploadPhotosBtn.style.display = 'inline-block';
-            clearPhotosBtn.style.display = 'inline-block';
+            uploadPhotosBtn.style.display = 'block';
         }
     }
     
     function updatePhotoCounter() {
-        photoCount.textContent = capturedPhotos.length;
+        // Show upload button if photos exist
         if (capturedPhotos.length > 0) {
-            photoCounter.style.display = 'inline-block';
+            uploadPhotosBtn.style.display = 'block';
         } else {
-            photoCounter.style.display = 'none';
+            uploadPhotosBtn.style.display = 'none';
         }
     }
     
@@ -466,7 +467,6 @@ document.addEventListener('DOMContentLoaded', function() {
         capturedPhotos = [];
         updatePhotoCounter();
         uploadPhotosBtn.style.display = 'none';
-        clearPhotosBtn.style.display = 'none';
     }
     
     function stopCamera() {
