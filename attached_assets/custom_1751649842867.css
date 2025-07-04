@@ -1,0 +1,196 @@
+/* Mobile-first design styles */
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    padding-bottom: 80px; /* Space for fixed bottom button */
+}
+
+/* Mobile Header */
+.mobile-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Product Card */
+.product-card {
+    border: 1px solid #e9ecef;
+}
+
+/* Photo Sections */
+.photo-section {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    height: 182px;
+    display: flex;
+    flex-direction: column;
+}
+
+.section-header h6 {
+    color: #212529;
+    font-size: 16px;
+}
+
+.section-header p {
+    color: #6c757d;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+/* Photo Grid */
+.photo-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    flex-grow: 1;
+    align-items: flex-start;
+}
+
+/* Photo Placeholder */
+.photo-placeholder {
+    width: 72px;
+    height: 96px;
+    background: #e3f2fd;
+    border: 2px dashed #2196f3;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.photo-placeholder:hover {
+    background: #bbdefb;
+    border-color: #1976d2;
+    transform: scale(1.02);
+}
+
+.photo-placeholder i {
+    font-size: 18px;
+    color: #2196f3;
+}
+
+/* Photo placeholder with uploaded image */
+.photo-placeholder.has-photo {
+    border: 2px solid #4caf50;
+    background: white;
+    padding: 2px;
+}
+
+.photo-placeholder.has-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.photo-placeholder.has-photo .remove-btn {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: #f44336;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Modal Styles */
+.modal-content {
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+/* Button Styles */
+.btn-primary {
+    background: #007bff;
+    border: none;
+    font-weight: 600;
+}
+
+.btn-outline-primary {
+    border: 2px solid #007bff;
+    font-weight: 600;
+}
+
+/* Fixed bottom area */
+.fixed-bottom {
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+}
+
+/* Camera styles */
+#camera-video {
+    max-width: 100%;
+    max-height: 60vh;
+    border-radius: 0.5rem;
+}
+
+#camera-canvas {
+    max-width: 100%;
+    max-height: 60vh;
+    border-radius: 0.5rem;
+    border: 2px solid #4caf50;
+}
+
+/* Gallery page styles */
+.gallery-image {
+    height: 200px;
+    object-fit: cover;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.gallery-image:hover {
+    transform: scale(1.02);
+}
+
+/* Alert animations */
+.alert {
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+    .photo-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+    }
+    
+    .photo-placeholder i {
+        font-size: 16px;
+    }
+    
+    .container-fluid {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+}
+
+@media (max-width: 375px) {
+    .photo-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
