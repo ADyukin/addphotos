@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ru" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Галерея фотографий</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/custom.css') }}" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <i class="fas fa-camera me-2"></i>Фото Галерея
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="{{ url_for('index') }}">
+                    <i class="fas fa-plus me-1"></i>Загрузить фото
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1><i class="fas fa-images me-2"></i>Галерея фотографий</h1>
+            <span class="badge bg-info">{{ photos|length }} фото</span>
+        </div>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% if photos %}
+            <div class="row g-4">
+                {% for photo in photos %}
+                    <div class="col-lg-4 col-md-6 col-sm-12">
+                        <div class="card h-100">
+                            <div class="position-relative">
+                                <img src="{{ url_for('uploaded_file', filename=photo.filename) }}" 
+                                     class="card-img-top gallery-image" 
+                                     alt="{{ photo.original_filename }}"
+                                     data-bs-toggle="modal" 
+                                     data-bs-target="#imageModal"
+                                     data-bs-src="{{ url_for('uploaded_file', filename=photo.filename) }}"
+                                     data-bs-title="{{ photo.original_filename }}">
+                                <div class="position-absolute top-0 end-0 p-2">
+                                    <button class="btn btn-danger btn-sm" 
+                                            onclick="deletePhoto({{ photo.id }})"
+                                            title="Удалить фото">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <h6 class="card-title text-truncate" title="{{ photo.original_filename }}">
+                                    {{ photo.original_filename }}
+                                </h6>
+                                <div class="row text-muted small">
+                                    <div class="col-6">
+                                        <i class="fas fa-calendar me-1"></i>
+                                        {{ photo.upload_date.strftime('%d.%m.%Y') }}
+                                    </div>
+                                    <div class="col-6 text-end">
+                                        <i class="fas fa-file me-1"></i>
+                                        {{ get_file_size_str(photo.file_size) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-center py-5">
+                <div class="empty-state">
+                    <i class="fas fa-images fa-5x text-muted mb-4"></i>
+                    <h3 class="text-muted">Галерея пуста</h3>
+                    <p class="text-muted mb-4">Загрузите первые фотографии, чтобы начать создавать свою галерею</p>
+                    <a href="{{ url_for('index') }}" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Загрузить фото
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Image Modal -->
+    <div class="modal fade" id="imageModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="imageModalLabel">Просмотр фото</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center p-0">
+                    <img id="modalImage" src="" class="img-fluid" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Подтвердите удаление</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Вы уверены, что хотите удалить это фото? Это действие нельзя отменить.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <form id="deleteForm" method="POST" style="display: inline;">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash me-1"></i>Удалить
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Image modal functionality
+        const imageModal = document.getElementById('imageModal');
+        const modalImage = document.getElementById('modalImage');
+        const modalLabel = document.getElementById('imageModalLabel');
+
+        imageModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const src = button.getAttribute('data-bs-src');
+            const title = button.getAttribute('data-bs-title');
+            
+            modalImage.src = src;
+            modalLabel.textContent = title;
+        });
+
+        // Delete functionality
+        function deletePhoto(photoId) {
+            const deleteForm = document.getElementById('deleteForm');
+            deleteForm.action = `/delete/${photoId}`;
+            
+            const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+            deleteModal.show();
+        }
+    </script>
+</body>
+</html>
