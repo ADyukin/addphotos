@@ -92,20 +92,27 @@ body {
 
 .photo-placeholder.has-photo .remove-btn {
     position: absolute;
-    top: -6px;
-    right: -6px;
-    background: #f44336;
-    color: white;
-    border: none;
+    top: -8px;
+    right: -8px;
+    background: white;
+    color: #f44336;
+    border: 2px solid #f44336;
     border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    font-size: 10px;
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    transition: all 0.2s ease;
+}
+
+.photo-placeholder.has-photo .remove-btn:hover {
+    background: #f44336;
+    color: white;
+    transform: scale(1.1);
 }
 
 /* Modal Styles */

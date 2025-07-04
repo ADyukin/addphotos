@@ -87,41 +87,35 @@ document.addEventListener('DOMContentLoaded', function() {
         const sectionElement = document.querySelector(`[data-section="${section}"]`);
         if (!sectionElement) return;
 
-        // Create photo grid if it doesn't exist or find next empty placeholder
         const photoGrid = sectionElement.closest('.photo-section').querySelector('.photo-grid');
-        let targetPlaceholder = photoGrid.querySelector('.photo-placeholder:not(.has-photo)');
         
-        if (!targetPlaceholder) {
-            // Create new placeholder if none available
-            targetPlaceholder = document.createElement('div');
-            targetPlaceholder.className = 'photo-placeholder';
-            targetPlaceholder.dataset.section = section;
-            photoGrid.appendChild(targetPlaceholder);
-        }
-
-        // Add the photo
-        targetPlaceholder.classList.add('has-photo');
-        targetPlaceholder.innerHTML = `
+        // Create new photo element (not placeholder)
+        const photoElement = document.createElement('div');
+        photoElement.className = 'photo-placeholder has-photo';
+        photoElement.dataset.section = section;
+        photoElement.innerHTML = `
             <img src="${imageUrl}" alt="${filename}">
             <button class="remove-btn" onclick="removePhoto(this)">
                 <i class="fas fa-times"></i>
             </button>
         `;
+        
+        // Insert before the main placeholder (always keep it first)
+        const mainPlaceholder = photoGrid.querySelector('.photo-placeholder:not(.has-photo)');
+        if (mainPlaceholder) {
+            photoGrid.insertBefore(photoElement, mainPlaceholder.nextSibling);
+        } else {
+            photoGrid.appendChild(photoElement);
+        }
     }
 
     // Make removePhoto function global
     window.removePhoto = function(button) {
-        const placeholder = button.closest('.photo-placeholder');
-        placeholder.classList.remove('has-photo');
-        placeholder.innerHTML = '<i class="fas fa-camera text-primary"></i>';
-        
-        // Re-add click handler
-        placeholder.addEventListener('click', function() {
-            if (!this.classList.contains('has-photo')) {
-                currentPhotoSection = this.dataset.section;
-                photoSelectionModal.show();
-            }
-        });
+        const photoElement = button.closest('.photo-placeholder');
+        // Only remove if it has a photo and is not the main placeholder
+        if (photoElement.classList.contains('has-photo')) {
+            photoElement.remove();
+        }
     };
 
     function uploadFiles(files) {
@@ -336,10 +330,10 @@ document.addEventListener('DOMContentLoaded', function() {
         acceptBtn.onclick = () => acceptPhoto(canvas);
         
         const rejectBtn = document.createElement('button');
-        rejectBtn.className = 'btn btn-danger btn-lg rounded-circle';
+        rejectBtn.className = 'btn btn-outline-danger btn-lg rounded-circle';
         rejectBtn.style.width = '60px';
         rejectBtn.style.height = '60px';
-        rejectBtn.innerHTML = '<i class="fas fa-times fa-lg"></i>';
+        rejectBtn.innerHTML = '<i class="fas fa-plus fa-lg" style="transform: rotate(45deg);"></i>';
         rejectBtn.title = 'Отклонить фото';
         rejectBtn.onclick = () => rejectPhoto();
         

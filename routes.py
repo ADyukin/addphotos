@@ -41,9 +41,6 @@ def upload_file():
         if file.filename == '':
             return jsonify({'success': False, 'error': 'Файл не выбран'}), 400
         
-        if file.filename is None:
-            return jsonify({'success': False, 'error': 'Файл не выбран'}), 400
-        
         if not allowed_file(file.filename):
             return jsonify({'success': False, 'error': 'Недопустимый формат файла. Разрешены: JPG, PNG, GIF'}), 400
         
@@ -70,11 +67,12 @@ def upload_file():
         mime_type = file.content_type or 'image/jpeg'
         
         # Save to database
-        photo = Photo()
-        photo.filename = unique_filename
-        photo.original_filename = original_filename
-        photo.file_size = file_size
-        photo.mime_type = mime_type
+        photo = Photo(
+            filename=unique_filename,
+            original_filename=original_filename,
+            file_size=file_size,
+            mime_type=mime_type
+        )
         
         db.session.add(photo)
         db.session.commit()
