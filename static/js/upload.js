@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const cameraError = document.getElementById('camera-error');
     const takePhotoBtn = document.getElementById('take-photo-btn');
     const uploadPhotosBtn = document.getElementById('upload-photos-btn');
-    const clearPhotosBtn = document.getElementById('clear-photos-btn');
     const photoCounter = document.getElementById('photo-counter');
     const photoCount = document.getElementById('photo-count');
     
@@ -321,6 +320,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function showPhotoApproval(canvas) {
+        // Hide shutter button
+        takePhotoBtn.style.display = 'none';
+        
         // Remove existing approval buttons if any
         const existingApproval = document.getElementById('photo-approval');
         if (existingApproval) {
@@ -330,29 +332,25 @@ document.addEventListener('DOMContentLoaded', function() {
         // Create approval buttons
         const approvalDiv = document.createElement('div');
         approvalDiv.id = 'photo-approval';
-        approvalDiv.className = 'd-flex justify-content-center gap-3 mt-3';
+        approvalDiv.className = 'photo-approval-controls';
         
         const acceptBtn = document.createElement('button');
-        acceptBtn.className = 'btn btn-success btn-lg rounded-circle';
-        acceptBtn.style.width = '60px';
-        acceptBtn.style.height = '60px';
-        acceptBtn.innerHTML = '<i class="fas fa-check fa-lg"></i>';
+        acceptBtn.className = 'photo-approval-btn accept';
+        acceptBtn.innerHTML = '<i class="fas fa-check"></i>';
         acceptBtn.title = 'Принять фото';
         acceptBtn.onclick = () => acceptPhoto(canvas);
         
         const rejectBtn = document.createElement('button');
-        rejectBtn.className = 'btn btn-outline-danger btn-lg rounded-circle';
-        rejectBtn.style.width = '60px';
-        rejectBtn.style.height = '60px';
-        rejectBtn.innerHTML = '<i class="fas fa-plus fa-lg" style="transform: rotate(45deg);"></i>';
+        rejectBtn.className = 'photo-approval-btn reject';
+        rejectBtn.innerHTML = '<i class="fas fa-times"></i>';
         rejectBtn.title = 'Отклонить фото';
         rejectBtn.onclick = () => rejectPhoto();
         
         approvalDiv.appendChild(acceptBtn);
         approvalDiv.appendChild(rejectBtn);
         
-        // Insert approval buttons after canvas
-        canvas.parentNode.insertBefore(approvalDiv, canvas.nextSibling);
+        // Insert approval buttons in camera container
+        canvas.parentNode.appendChild(approvalDiv);
     }
     
     function acceptPhoto(canvas) {
@@ -391,17 +389,21 @@ document.addEventListener('DOMContentLoaded', function() {
         cameraCanvas.style.display = 'none';
         takePhotoBtn.style.display = 'block';
         
-        // Show upload button if we have photos
-        if (capturedPhotos.length > 0) {
-            uploadPhotosBtn.style.display = 'block';
-        }
+        // Update photo counter and upload button visibility
+        updatePhotoCounter();
     }
     
     function updatePhotoCounter() {
-        // Show upload button if photos exist
+        if (photoCount) {
+            photoCount.textContent = capturedPhotos.length;
+        }
+        
+        // Show counter and upload button if photos exist
         if (capturedPhotos.length > 0) {
+            if (photoCounter) photoCounter.style.display = 'block';
             uploadPhotosBtn.style.display = 'block';
         } else {
+            if (photoCounter) photoCounter.style.display = 'none';
             uploadPhotosBtn.style.display = 'none';
         }
     }
