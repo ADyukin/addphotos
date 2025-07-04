@@ -45,7 +45,7 @@ body {
 .photo-grid {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 4px;
     flex-grow: 1;
     align-items: flex-start;
 }
@@ -182,8 +182,7 @@ body {
 /* Responsive adjustments */
 @media (max-width: 576px) {
     .photo-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 8px;
+        gap: 4px;
     }
     
     .photo-placeholder i {
