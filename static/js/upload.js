@@ -114,6 +114,36 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    function addLoadingPhotoToSection(section, filename) {
+        const sectionElement = document.querySelector(`[data-section="${section}"]`);
+        if (!sectionElement) return null;
+
+        const photoGrid = sectionElement.closest('.photo-section').querySelector('.photo-grid');
+        
+        // Create loading photo element
+        const photoElement = document.createElement('div');
+        photoElement.className = 'photo-placeholder has-photo loading';
+        photoElement.dataset.section = section;
+        photoElement.innerHTML = `
+            <div class="loading-indicator">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Загружается...</span>
+                </div>
+                <div class="loading-text">Загружается...</div>
+            </div>
+        `;
+        
+        // Insert before the main placeholder (always keep it first)
+        const mainPlaceholder = photoGrid.querySelector('.photo-placeholder:not(.has-photo)');
+        if (mainPlaceholder) {
+            photoGrid.insertBefore(photoElement, mainPlaceholder.nextSibling);
+        } else {
+            photoGrid.appendChild(photoElement);
+        }
+        
+        return photoElement;
+    }
+
     // Make removePhoto function global
     window.removePhoto = function(button) {
         const photoElement = button.closest('.photo-placeholder');
@@ -144,6 +174,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function uploadFile(file, callback) {
+        let loadingElement = null;
+        
+        // Show loading indicator
+        if (currentPhotoSection) {
+            loadingElement = addLoadingPhotoToSection(currentPhotoSection, file.name);
+        }
+        
         const formData = new FormData();
         formData.append('file', file);
 
@@ -153,16 +190,30 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => response.json())
         .then(data => {
+            // Remove loading indicator
+            if (loadingElement) {
+                loadingElement.remove();
+            }
+            
             if (data.success && currentPhotoSection) {
-                // Add photo to the current section
-                const imageUrl = `/uploads/${data.photo.filename}`;
-                addPhotoToSection(currentPhotoSection, imageUrl, data.photo.original_filename);
+                // Create temporary image URL from file
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    addPhotoToSection(currentPhotoSection, e.target.result, data.photo.original_filename);
+                };
+                reader.readAsDataURL(file);
             }
             // Remove toast notifications
             callback(data);
         })
         .catch(error => {
             console.error('Upload error:', error);
+            
+            // Remove loading indicator
+            if (loadingElement) {
+                loadingElement.remove();
+            }
+            
             const errorResult = {
                 success: false,
                 error: 'Ошибка сети при загрузке файла'
