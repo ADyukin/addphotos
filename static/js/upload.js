@@ -41,10 +41,16 @@ document.addEventListener('DOMContentLoaded', function() {
         openCamera();
     });
 
+    // Gallery option handler
+    const galleryOption = document.getElementById('gallery-option');
+    galleryOption.addEventListener('click', function() {
+        photoSelectionModal.hide();
+        document.getElementById('file-input').click();
+    });
+
     // Handle file input change
     fileInput.addEventListener('change', function(e) {
         if (e.target.files.length > 0) {
-            photoSelectionModal.hide();
             handleFiles(e.target.files);
         }
     });
@@ -153,7 +159,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const imageUrl = `/uploads/${data.photo.filename}`;
                 addPhotoToSection(currentPhotoSection, imageUrl, data.photo.original_filename);
             }
-            showUploadResult(data, file.name);
+            // Remove toast notifications
             callback(data);
         })
         .catch(error => {
@@ -162,7 +168,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 success: false,
                 error: 'Ошибка сети при загрузке файла'
             };
-            showUploadResult(errorResult, file.name);
+            // Only show errors, not success messages
+            if (!errorResult.success) {
+                showUploadResult(errorResult, file.name);
+            }
             callback(errorResult);
         });
     }
@@ -357,9 +366,6 @@ document.addEventListener('DOMContentLoaded', function() {
             capturedPhotos.push(photoData);
             updatePhotoCounter();
             
-            // Show success message
-            showTempMessage('Фото принято!', 'success');
-            
             // Reset camera for next photo
             resetCameraForNextPhoto();
             
@@ -367,9 +373,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function rejectPhoto() {
-        // Show rejection message
-        showTempMessage('Фото отклонено', 'warning');
-        
         // Reset camera for next photo
         resetCameraForNextPhoto();
     }
@@ -426,7 +429,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function uploadCapturedPhotos() {
         if (capturedPhotos.length === 0) {
-            showTempMessage('Нет фотографий для загрузки', 'warning');
             return;
         }
         

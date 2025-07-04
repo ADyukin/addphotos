@@ -91,6 +91,7 @@ The application follows a traditional Flask MVC (Model-View-Controller) architec
 
 ## Changelog
 - July 04, 2025. Initial setup
+- July 04, 2025. UI improvements: reduced photo card gaps to 4px, section margins to mb-2, modal redesign with bottom positioning and rounded top corners only, full-screen camera with circular shutter button, removed toast notifications
 
 ## User Preferences
 
