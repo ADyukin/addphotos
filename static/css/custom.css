@@ -43,10 +43,19 @@ body {
 /* Photo Grid */
 .photo-grid {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 4px;
     flex-grow: 1;
     align-items: flex-start;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.photo-grid::-webkit-scrollbar {
+    display: none;
 }
 
 /* Photo Placeholder */
@@ -93,9 +102,9 @@ body {
     position: absolute;
     top: -8px;
     right: -8px;
-    background: white;
-    color: #f44336;
-    border: 2px solid #f44336;
+    background: #99A3AE;
+    color: white;
+    border: 2px solid white;
     border-radius: 50%;
     width: 24px;
     height: 24px;
@@ -109,7 +118,7 @@ body {
 }
 
 .photo-placeholder.has-photo .remove-btn:hover {
-    background: #f44336;
+    background: #7a8590;
     color: white;
     transform: scale(1.1);
 }
@@ -319,25 +328,21 @@ body {
     cursor: pointer;
     transition: all 0.2s;
     font-size: 24px;
-    color: white;
-}
-
-.photo-approval-btn.accept {
-    background: rgba(40, 167, 69, 0.8);
-}
-
-.photo-approval-btn.reject {
-    background: rgba(220, 53, 69, 0.8);
+    background: rgba(153, 163, 174, 0.8);
+    color: #000;
 }
 
 .photo-approval-btn:hover {
     transform: scale(1.05);
+    background: rgba(153, 163, 174, 0.9);
 }
 
 /* Responsive adjustments */
 @media (max-width: 576px) {
     .photo-grid {
         gap: 4px;
+        flex-wrap: nowrap;
+        overflow-x: auto;
     }
     
     .photo-placeholder i {
