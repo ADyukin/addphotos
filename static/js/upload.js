@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
     const fileInput = document.getElementById('file-input');
-    const uploadProgress = document.getElementById('upload-progress');
     const uploadResults = document.getElementById('upload-results');
     
     // Modal elements
@@ -30,6 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             currentPhotoSection = this.dataset.section;
+            console.log('Photo placeholder clicked, section:', currentPhotoSection);
             photoSelectionModal.show();
         });
     });
@@ -89,10 +89,18 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function addPhotoToSection(section, imageUrl, filename) {
+        console.log('Adding photo to section:', section, 'filename:', filename);
         const sectionElement = document.querySelector(`[data-section="${section}"]`);
-        if (!sectionElement) return;
+        if (!sectionElement) {
+            console.error('Section element not found for section:', section);
+            return;
+        }
 
         const photoGrid = sectionElement.closest('.photo-section').querySelector('.photo-grid');
+        if (!photoGrid) {
+            console.error('Photo grid not found for section:', section);
+            return;
+        }
         
         // Create new photo element (not placeholder)
         const photoElement = document.createElement('div');
@@ -112,6 +120,8 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             photoGrid.appendChild(photoElement);
         }
+        
+        console.log('Photo added successfully to section:', section);
     }
 
     function addLoadingPhotoToSection(section, filename) {
@@ -154,8 +164,9 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     function uploadFiles(files) {
-        uploadProgress.style.display = 'block';
-        uploadResults.innerHTML = '';
+        if (uploadResults) {
+            uploadResults.innerHTML = '';
+        }
 
         let uploadedCount = 0;
         const totalFiles = files.length;
@@ -163,12 +174,7 @@ document.addEventListener('DOMContentLoaded', function() {
         Array.from(files).forEach(file => {
             uploadFile(file, (result) => {
                 uploadedCount++;
-
-                if (uploadedCount === totalFiles) {
-                    setTimeout(() => {
-                        uploadProgress.style.display = 'none';
-                    }, 1000);
-                }
+                // Убираем показ uploadProgress - используем только лоадер на фото
             });
         });
     }
@@ -196,12 +202,15 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             if (data.success && currentPhotoSection) {
+                console.log('Upload successful, adding photo to section:', currentPhotoSection);
                 // Create temporary image URL from file
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     addPhotoToSection(currentPhotoSection, e.target.result, data.photo.original_filename);
                 };
                 reader.readAsDataURL(file);
+            } else {
+                console.log('Upload successful but no current section or upload failed:', { success: data.success, currentSection: currentPhotoSection });
             }
             // Remove toast notifications
             callback(data);
@@ -227,6 +236,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function showUploadResult(result, filename) {
+        if (!uploadResults) {
+            console.warn('Upload results container not found');
+            return;
+        }
+        
         const alertClass = result.success ? 'alert-success' : 'alert-danger';
         const icon = result.success ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
         const message = result.success ? result.message : result.error;
@@ -381,21 +395,21 @@ document.addEventListener('DOMContentLoaded', function() {
         const approvalDiv = document.createElement('div');
         approvalDiv.id = 'photo-approval';
         approvalDiv.className = 'photo-approval-controls';
-        
-        const acceptBtn = document.createElement('button');
-        acceptBtn.className = 'photo-approval-btn accept';
-        acceptBtn.innerHTML = '<i class="fas fa-check"></i>';
-        acceptBtn.title = 'Принять фото';
-        acceptBtn.onclick = () => acceptPhoto(canvas);
-        
+
         const rejectBtn = document.createElement('button');
         rejectBtn.className = 'photo-approval-btn reject';
         rejectBtn.innerHTML = '<i class="fas fa-times"></i>';
         rejectBtn.title = 'Отклонить фото';
         rejectBtn.onclick = () => rejectPhoto();
-        
-        approvalDiv.appendChild(acceptBtn);
+
+        const acceptBtn = document.createElement('button');
+        acceptBtn.className = 'photo-approval-btn accept';
+        acceptBtn.innerHTML = '<i class="fas fa-check"></i>';
+        acceptBtn.title = 'Принять фото';
+        acceptBtn.onclick = () => acceptPhoto(canvas);
+
         approvalDiv.appendChild(rejectBtn);
+        approvalDiv.appendChild(acceptBtn);
         
         // Insert approval buttons in camera container
         canvas.parentNode.appendChild(approvalDiv);
@@ -483,7 +497,6 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        uploadProgress.style.display = 'block';
         uploadResults.innerHTML = '';
         
         let uploadedCount = 0;
@@ -497,12 +510,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
             uploadFile(file, (result) => {
                 uploadedCount++;
-                
-                if (uploadedCount === totalPhotos) {
-                    setTimeout(() => {
-                        uploadProgress.style.display = 'none';
-                    }, 1000);
-                }
             });
         });
         
@@ -540,7 +547,6 @@ document.addEventListener('DOMContentLoaded', function() {
         cameraError.style.display = 'none';
         takePhotoBtn.style.display = 'none';
         uploadPhotosBtn.style.display = 'none';
-        clearPhotosBtn.style.display = 'none';
         photoCounter.style.display = 'none';
         updatePhotoCounter();
     }

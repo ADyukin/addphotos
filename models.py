@@ -1,23 +1,37 @@
 from datetime import datetime
-from app import db
 
-class Photo(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    filename = db.Column(db.String(255), nullable=False)
-    original_filename = db.Column(db.String(255), nullable=False)
-    file_size = db.Column(db.Integer, nullable=False)
-    mime_type = db.Column(db.String(100), nullable=False)
-    upload_date = db.Column(db.DateTime, default=datetime.utcnow)
+class PhotoManager:
+    def __init__(self):
+        self.photos = []
+        self.next_id = 1
     
-    def __repr__(self):
-        return f'<Photo {self.original_filename}>'
-    
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'filename': self.filename,
-            'original_filename': self.original_filename,
-            'file_size': self.file_size,
-            'mime_type': self.mime_type,
-            'upload_date': self.upload_date.isoformat()
+    def add_photo(self, filename, original_filename, file_size, mime_type):
+        photo = {
+            'id': self.next_id,
+            'filename': filename,
+            'original_filename': original_filename,
+            'file_size': file_size,
+            'mime_type': mime_type,
+            'upload_date': datetime.utcnow()
         }
+        self.photos.append(photo)
+        self.next_id += 1
+        return photo
+    
+    def get_all_photos(self):
+        return sorted(self.photos, key=lambda x: x['upload_date'], reverse=True)
+    
+    def get_photo_by_id(self, photo_id):
+        for photo in self.photos:
+            if photo['id'] == photo_id:
+                return photo
+        return None
+    
+    def delete_photo(self, photo_id):
+        for i, photo in enumerate(self.photos):
+            if photo['id'] == photo_id:
+                return self.photos.pop(i)
+        return None
+
+# Глобальный экземпляр менеджера фото
+photo_manager = PhotoManager()

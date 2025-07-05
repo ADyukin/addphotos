@@ -1,16 +1,67 @@
 /* Mobile-first design styles */
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Onest', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     padding-bottom: 80px; /* Space for fixed bottom button */
+    background: #F5F7FA;
 }
 
 /* Mobile Header */
 .mobile-header {
-    position: sticky;
+    position: relative;
     top: 0;
     z-index: 1000;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    background: #fff;
+    border-bottom: 1px solid #f0f0f0;
+    border-bottom-left-radius: 24px;
+    border-bottom-right-radius: 24px;
+    margin-bottom: 8px;
+    box-shadow: none;
+    display: flex;
+    align-items: center;
+    min-height: 52px;
+    height: 52px;
+    padding: 0;
+}
+
+.mobile-header h5 {
+    font-family: 'Onest', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: #001A34;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    height: 20px;
+    text-align: center;
+    pointer-events: none;
+    line-height: 20px;
+}
+
+.mobile-header .back-btn {
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    margin: 0;
+    padding: 0;
+    background: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    height: 32px;
+    width: 32px;
+    z-index: 2;
+}
+
+.mobile-header .back-btn svg {
+    display: block;
+    width: 24px;
+    height: 24px;
+    fill: rgba(0,26,52,0.4);
 }
 
 /* Product Card */
@@ -21,53 +72,60 @@ body {
 /* Photo Sections */
 .photo-section {
     background: white;
-    border-radius: 12px;
+    border-radius: 24px;
     padding: 16px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    height: 182px;
+    min-height: 182px;
     display: flex;
     flex-direction: column;
+    margin-bottom: 0;
 }
 
 .section-header h6 {
     color: #212529;
     font-size: 16px;
+    font-family: 'Onest', sans-serif;
+    font-weight: 600;
 }
 
 .section-header p {
     color: #6c757d;
     font-size: 14px;
     line-height: 1.4;
+    font-family: 'Onest', sans-serif;
+    font-weight: 400;
 }
 
 /* Photo Grid */
 .photo-grid {
     display: flex;
-    flex-wrap: wrap;
+    overflow-x: auto;
     gap: 4px;
     flex-grow: 1;
     align-items: flex-start;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    padding: 2px 0;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+
+.photo-grid::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
 }
 
 /* Photo Placeholder */
 .photo-placeholder {
     width: 72px;
     height: 96px;
+    flex-shrink: 0;
     background: #e3f2fd;
-    border: 2px dashed #2196f3;
-    border-radius: 8px;
+    border-radius: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     transition: all 0.2s ease;
     position: relative;
-}
-
-.photo-placeholder:hover {
-    background: #bbdefb;
-    border-color: #1976d2;
-    transform: scale(1.02);
 }
 
 .photo-placeholder i {
@@ -77,41 +135,40 @@ body {
 
 /* Photo placeholder with uploaded image */
 .photo-placeholder.has-photo {
-    border: 2px solid #4caf50;
+    border: none;
     background: white;
-    padding: 2px;
+    padding: 0;
 }
 
 .photo-placeholder.has-photo img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 6px;
+    border-radius: 16px;
 }
 
 .photo-placeholder.has-photo .remove-btn {
     position: absolute;
-    top: -8px;
-    right: -8px;
-    background: white;
-    color: #f44336;
-    border: 2px solid #f44336;
+    top: 4px;
+    right: 4px;
+    background: #99A3AE;
+    color: #fff;
+    border: none;
     border-radius: 50%;
-    width: 24px;
-    height: 24px;
-    font-size: 12px;
+    width: 18px;
+    height: 18px;
+    font-size: 9px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    transition: all 0.2s ease;
+    z-index: 10;
 }
 
-.photo-placeholder.has-photo .remove-btn:hover {
-    background: #f44336;
-    color: white;
-    transform: scale(1.1);
+.photo-placeholder.has-photo .remove-btn i {
+    color: #fff;
+    font-size: 12px;
+    line-height: 1;
 }
 
 /* Loading indicator for photos */
@@ -148,30 +205,67 @@ body {
     background: #007bff;
     border: none;
     font-weight: 600;
+    font-family: 'Onest', sans-serif;
 }
 
 .btn-outline-primary {
     border: 2px solid #007bff;
     font-weight: 600;
+    font-family: 'Onest', sans-serif;
+}
+
+/* Typography improvements with Onest font */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Onest', sans-serif;
+    font-weight: 600;
+}
+
+.navbar-brand, .nav-link {
+    font-family: 'Onest', sans-serif;
+    font-weight: 500;
+}
+
+.modal-title {
+    font-family: 'Onest', sans-serif;
+    font-weight: 600;
+}
+
+.card-title {
+    font-family: 'Onest', sans-serif;
+    font-weight: 500;
 }
 
 /* Fixed bottom area */
 .fixed-bottom {
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    border-top: 1px solid rgba(204, 214, 228, 0.3);
+    border-top-left-radius: 24px;
+    border-top-right-radius: 24px;
+}
+
+.fixed-bottom .btn-primary {
+    border-radius: 12px;
+    font-weight: 600;
+}
+
+/* Container adjustments for full-width cards */
+.container-fluid {
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
 /* Camera styles */
 #camera-video {
-    max-width: 100%;
-    max-height: 60vh;
-    border-radius: 0.5rem;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 #camera-canvas {
-    max-width: 100%;
-    max-height: 60vh;
-    border-radius: 0.5rem;
-    border: 2px solid #4caf50;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 /* Gallery page styles */
@@ -182,8 +276,42 @@ body {
     transition: transform 0.2s ease;
 }
 
-.gallery-image:hover {
-    transform: scale(1.02);
+/* Horizontal Gallery */
+.horizontal-gallery {
+    display: flex;
+    overflow-x: auto;
+    gap: 1rem;
+    padding: 0.5rem 0;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+
+.horizontal-gallery::-webkit-scrollbar {
+    height: 8px;
+}
+
+.horizontal-gallery::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.horizontal-gallery::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.horizontal-gallery::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+.gallery-item {
+    flex: 0 0 300px;
+    min-width: 300px;
+}
+
+.gallery-item .card {
+    height: 100%;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 /* Alert animations */
@@ -239,6 +367,12 @@ body {
     padding: 0;
     background: #000;
     position: relative;
+    overflow: hidden;
+    /* Safe area for devices with notch */
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
 }
 
 .camera-video-container {
@@ -246,8 +380,7 @@ body {
     width: 100%;
     height: 100%;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
 }
 
 .camera-video-container video,
@@ -255,11 +388,12 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    flex: 1;
 }
 
 .camera-controls {
     position: absolute;
-    bottom: 160px;
+    bottom: 120px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -280,10 +414,7 @@ body {
     align-items: center;
     cursor: pointer;
     transition: all 0.2s;
-}
-
-.camera-shutter-btn:hover {
-    background: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .camera-shutter-btn::after {
@@ -299,27 +430,31 @@ body {
     bottom: 20px;
     left: 20px;
     right: 20px;
-    background: rgba(0, 123, 255, 0.8);
+    background: rgba(0, 123, 255, 0.9);
     color: white;
     border: none;
     border-radius: 25px;
     padding: 15px;
     font-size: 16px;
     font-weight: 500;
+    font-family: 'Onest', sans-serif;
     z-index: 10;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .camera-photo-counter {
     position: absolute;
     top: 20px;
     left: 20px;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.8);
     color: white;
     padding: 8px 12px;
     border-radius: 20px;
     font-size: 14px;
     font-weight: 500;
+    font-family: 'Onest', sans-serif;
     z-index: 10;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .photo-approval-controls {
@@ -336,26 +471,26 @@ body {
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    border: 3px solid white;
+    border: none;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
     transition: all 0.2s;
     font-size: 24px;
-    color: white;
+    color: #fff;
+    background: rgba(0,0,0,0.7);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-.photo-approval-btn.accept {
-    background: rgba(40, 167, 69, 0.8);
+.gallery-item {
+    flex: 0 0 250px;
+    min-width: 250px;
 }
-
-.photo-approval-btn.reject {
-    background: rgba(220, 53, 69, 0.8);
-}
-
-.photo-approval-btn:hover {
-    transform: scale(1.05);
+    
+.horizontal-gallery {
+    gap: 0.75rem;
+    padding: 0.25rem 0;
 }
 
 /* Responsive adjustments */
@@ -368,14 +503,154 @@ body {
         font-size: 16px;
     }
     
-    .container-fluid {
-        padding-left: 12px;
-        padding-right: 12px;
+    /* Camera responsive adjustments */
+    .camera-controls {
+        bottom: 100px;
+    }
+    
+    .camera-upload-btn {
+        bottom: 15px;
+        left: 15px;
+        right: 15px;
+        padding: 12px;
+        font-size: 15px;
+    }
+    
+    .photo-approval-controls {
+        bottom: 70px;
+    }
+    
+    .camera-photo-counter {
+        top: 15px;
+        left: 15px;
+        padding: 6px 10px;
+        font-size: 13px;
+    }
+}
+@media (max-width: 375px) {
+    .photo-grid {
+        gap: 3px;
+    }
+    
+    .photo-placeholder {
+        width: 65px;
+        height: 88px;
+    }
+    
+    /* Camera responsive adjustments for very small screens */
+    .camera-controls {
+        bottom: 90px;
+    }
+    
+    .camera-upload-btn {
+        bottom: 12px;
+        left: 12px;
+        right: 12px;
+        padding: 10px;
+        font-size: 14px;
+    }
+    
+    .photo-approval-controls {
+        bottom: 60px;
+    }
+    
+    .camera-shutter-btn {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .camera-shutter-btn::after {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .photo-approval-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
     }
 }
 
-@media (max-width: 375px) {
-    .photo-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+/* Photo selection modal custom styles */
+#photoSelectionModal .modal-content {
+    min-height: 160px;
+    padding: 0;
+    background: #fff;
+    border-radius: 20px 20px 0 0;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+#photoSelectionModal .modal-body {
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 160px;
+}
+
+.photo-modal-btn {
+    height: 56px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    gap: 8px;
+    margin: 0;
+    box-shadow: none;
+    border: none;
+    transition: background 0.15s;
+}
+
+.photo-modal-btn.photo {
+    background: rgba(0,150,255,0.08);
+    color: #005BFF;
+}
+
+.photo-modal-btn.photo svg {
+    width: 24px;
+    height: 24px;
+    fill: #005BFF;
+}
+
+.photo-modal-btn.gallery {
+    background: transparent;
+    color: #005BFF;
+    border: none;
+}
+
+.photo-modal-btn.gallery svg {
+    width: 24px;
+    height: 24px;
+    fill: #005BFF;
+}
+
+.photo-modal-btn + .photo-modal-btn {
+    margin-top: 8px;
+}
+
+.camera-close-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.7);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1050;
+    padding: 0;
+    box-shadow: none;
+    transition: background 0.15s;
+}
+
+.camera-close-btn i {
+    color: #fff;
+    font-size: 18px;
+    line-height: 1;
 }

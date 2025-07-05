@@ -3,8 +3,8 @@ import uuid
 from flask import render_template, request, redirect, url_for, flash, jsonify, send_from_directory
 from werkzeug.utils import secure_filename
 from PIL import Image
-from app import app, db
-from models import Photo
+from app import app
+from models import photo_manager
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -27,7 +27,7 @@ def index():
 
 @app.route('/gallery')
 def gallery():
-    photos = Photo.query.order_by(Photo.upload_date.desc()).all()
+    photos = photo_manager.get_all_photos()
     return render_template('gallery.html', photos=photos, get_file_size_str=get_file_size_str)
 
 @app.route('/upload', methods=['POST'])
@@ -66,21 +66,13 @@ def upload_file():
         file_size = os.path.getsize(file_path)
         mime_type = file.content_type or 'image/jpeg'
         
-        # Save to database
-        photo = Photo(
-            filename=unique_filename,
-            original_filename=original_filename,
-            file_size=file_size,
-            mime_type=mime_type
-        )
-        
-        db.session.add(photo)
-        db.session.commit()
+        # Add to photo manager
+        photo = photo_manager.add_photo(unique_filename, original_filename, file_size, mime_type)
         
         return jsonify({
             'success': True, 
             'message': 'Фото успешно загружено!',
-            'photo': photo.to_dict()
+            'photo': photo
         })
         
     except Exception as e:
@@ -94,16 +86,18 @@ def uploaded_file(filename):
 @app.route('/delete/<int:photo_id>', methods=['POST'])
 def delete_photo(photo_id):
     try:
-        photo = Photo.query.get_or_404(photo_id)
+        photo = photo_manager.get_photo_by_id(photo_id)
+        if not photo:
+            flash('Фото не найдено', 'error')
+            return redirect(url_for('gallery'))
         
         # Delete file from filesystem
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], photo.filename)
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], photo['filename'])
         if os.path.exists(file_path):
             os.remove(file_path)
         
-        # Delete from database
-        db.session.delete(photo)
-        db.session.commit()
+        # Delete from photo manager
+        photo_manager.delete_photo(photo_id)
         
         flash('Фото успешно удалено!', 'success')
         return redirect(url_for('gallery'))
